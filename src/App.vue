@@ -3,19 +3,16 @@
 </template>
 
 
-<style lang="scss">
-
-</style>
 <script>
-import { get } from './utils/request';
+// import { get } from './utils/request';
 
 export default {
-  setup() {
-  !(async()=>{
-      const data = await get('/api/shop/hot-shop')
-  console.log(data);
-  })();
-}
-
+//   setup() {
+//   !(async()=>{
+//       const data = await get('/api/shop/hot-shop')
+//   console.log(data);
+//   })();
+// }
+name:'app'
 };
 </script>
