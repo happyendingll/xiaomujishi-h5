@@ -5,6 +5,7 @@ import store from "./store";
 import "normalize.css";
 import "./style/base.scss";
 import {
+  Toast,
   ActionBar,
   ActionBarIcon,
   ActionBarButton,
@@ -41,6 +42,7 @@ import {
 
 createApp(App)
   .use(store)
+  .use(Toast)
   .use(ActionBar)
   .use(ActionBarIcon)
   .use(ActionBarButton)

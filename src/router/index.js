@@ -6,63 +6,63 @@ const routes = [
   },
   {
     path: "/login",
-    name: "login",
+    name: "Login",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/user/user-login.vue"),
+      import(/* webpackChunkName: "about" */ "../views/login/Login.vue"),
   },
   {
     path: "/register",
-    name: "register",
+    name: "Register",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/user/user-register.vue"),
+      import(/* webpackChunkName: "about" */ "../views/login/Register.vue"),
   },
   {
     path: "/home",
-    name: "home",
+    name: "Home",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/home/home-index.vue"),
+      import(/* webpackChunkName: "about" */ "../views/home/Home.vue"),
   },
   {
-    path: "/shop-cart",
-    name: "shopCart",
+    path: "/shopCart",
+    name: "ShopCart",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/shop/shop-cart.vue"),
+      import(/* webpackChunkName: "about" */ "../views/shop/ShopCart.vue"),
   },
   {
-    path: "/address",
-    name: "address",
+    path: "/addressList",
+    name: "AddressList",
     component: () =>
       import(
-        /* webpackChunkName: "about" */ "../views/address/address-list.vue"
+        /* webpackChunkName: "about" */ "../views/address/AddressList.vue"
       ),
   },
   {
-    path: "/address-edit",
-    name: "address-edit",
+    path: "/addressEdit",
+    name: "AddressEdit",
     component: () =>
       import(
-        /* webpackChunkName: "about" */ "../views/address/address-edit.vue"
+        /* webpackChunkName: "about" */ "../views/address/AddressEdit.vue"
       ),
   },
   {
-    path: "/address-add",
-    name: "address-add",
+    path: "/addressAdd",
+    name: "AddressAdd",
     component: () =>
       import(
-        /* webpackChunkName: "about" */ "../views/address/address-add.vue"
+        /* webpackChunkName: "about" */ "../views/address/AddressAdd.vue"
       ),
   },
   {
-    path: "/shop-info",
-    name: "shop-info",
+    path: "/shop",
+    name: "Shop",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/shop/shop-info.vue"),
+      import(/* webpackChunkName: "about" */ "../views/shop/Shop.vue"),
   },
   {
-    path: "/order-list",
-    name: "order-list",
+    path: "/order",
+    name: "Order",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/order/order-list.vue"),
+      import(/* webpackChunkName: "about" */ "../views/order/Order.vue"),
   },
 
   {

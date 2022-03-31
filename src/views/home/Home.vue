@@ -13,7 +13,7 @@
   <van-swipe-item></van-swipe-item>
   <van-swipe-item></van-swipe-item>
 </van-swipe>
-<van-grid class="my-grid" :column-num="5">
+<van-grid class="my-grid" :column-num="5" @click="handle_click">
   <van-grid-item icon="photo-o" text="文字" />
   <van-grid-item icon="photo-o" text="文字" />
   <van-grid-item icon="photo-o" text="文字" />
@@ -59,11 +59,11 @@
   align-items: center;
   .position_icon_location{
   margin-left: 1.6rem;
-  margin-top: 0.0.05rem;
+  margin-top: 0.5rem;
   }
   .position_title{
     margin-left: 0.8rem;
-    font-family: PingFangSC-Regular;
+    font-family: PingFangSC-Regular,serif;
     width: 20.8rem;
 font-size: 1.3rem;
 color: #333333;
@@ -104,6 +104,7 @@ height: 0.8rem;
 <script>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import {Toast} from "vant";
 
 export default {
   setup() {
@@ -117,7 +118,10 @@ export default {
     const onClick=()=>{
       router.push({ name: 'shop-info' })
     }
-    return { active ,value,images,onClick};
+    const handle_click=()=>{
+      Toast('提示内容');
+    }
+    return { active ,value,images,onClick,handle_click};
   },
 };
 </script>
