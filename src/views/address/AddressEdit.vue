@@ -1,4 +1,4 @@
-<template lang="">
+<template>
 <van-nav-bar
   title="编辑收货地址"
   left-text="返回"
@@ -28,9 +28,9 @@ export default {
     const digit = ref('');
     const number = ref('');
     const password = ref('');
-
-    return { tel, text, digit, number, password };
-  },
+    const onClickLeft = () => history.back();
+    return { tel, text, digit, number, password,onClickLeft };
+  }
 };
 
 </script>

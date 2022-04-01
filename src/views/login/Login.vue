@@ -1,6 +1,4 @@
 <template>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <div class="all">
     <van-image
         round
@@ -37,7 +35,7 @@
         </van-button>
       </div>
       <div class="other">
-        <span @click="handleRegister">立即注册</span>
+        <span @click="handelClick">立即注册</span>
         <span style="margin-left: 1rem">忘记密码</span>
       </div>
 
@@ -45,23 +43,32 @@
   </div>
 </template>
 <script>
-import {ref} from 'vue';
+import {ref, reactive} from 'vue';
 import {useRouter} from 'vue-router'
+import {post} from '@/utils/request'
+import {Toast} from 'vant'
 
 export default {
   setup() {
     const username = ref('');
     const password = ref('');
+    const user = reactive({username, password})
     const router = useRouter();
 
     const onSubmit = (values) => {
       console.log('submit', values);
     };
-    const handleLogin = () => {
-      localStorage.isLogin = true
-      router.push({name: 'Home'})
+    const handleLogin = async () => {
+      const {errno} = await post('/api/user/login', user)
+      if (errno === 0) {
+        localStorage.isLogin = true
+        await router.push({name: 'Home'})
+      } else {
+        Toast('用户名或密码错误')
+      }
+
     };
-    const handleRegister = () => {
+    const handelClick = () => {
       router.push({name: 'Register'})
     }
     return {
@@ -69,7 +76,7 @@ export default {
       password,
       onSubmit,
       handleLogin,
-      handleRegister
+      handelClick
     };
   },
 };

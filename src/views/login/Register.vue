@@ -32,15 +32,15 @@
             v-model="password"
             type="password"
             name="密码"
-            label="密码"
-            placeholder="密码"
+            label="确认密码"
+            placeholder="确认密码"
             :rules="[{ required: true, message: '请确认密码' }]"
             autocomplete="new-password"
             style="background-color: #ccc"
         />
       </van-cell-group>
       <div style="margin: 16px;">
-        <van-button round block type="primary" native-type="submit" class="registerBtn">
+        <van-button round block type="primary" native-type="submit" class="registerBtn" @click="handleRegister">
           注册
         </van-button>
       </div>
@@ -49,13 +49,15 @@
   </div>
 </template>
 <script>
-import {ref} from 'vue';
+import {ref,reactive} from 'vue';
 import {useRouter} from 'vue-router'
+import {post} from '@/utils/request'
 
 export default {
   setup() {
     const username = ref('');
     const password = ref('');
+    const user = reactive({username,password})
     const router = useRouter()
     const onSubmit = (values) => {
       console.log('submit', values);
@@ -63,12 +65,17 @@ export default {
     const handleClick = () => {
       router.push({name: 'Login'})
     }
+    const handleRegister = async () => {
+
+      const data = await post('/api/user/register', user)
+      console.log(data)
+    }
 
     return {
       username,
       password,
       onSubmit,
-      handleClick
+      handleClick, handleRegister
     };
   },
 };
@@ -105,6 +112,7 @@ export default {
 .registerBtn {
   margin-top: 2.7rem;
 }
+
 .other {
   display: flex;
   justify-content: center;
