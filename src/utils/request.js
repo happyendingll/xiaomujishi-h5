@@ -30,4 +30,16 @@ const post = (url, params = {}) => {
       });
   });
 };
-export { get ,post};
+const patch = (url, params = {}) => {
+  return new Promise((resolve, reject) => {
+    instance
+        .patch(url, params)
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+  });
+};
+export { get ,post,patch};
