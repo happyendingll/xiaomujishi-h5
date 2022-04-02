@@ -13,7 +13,7 @@ const routes = [
         component: () =>
             import(/* webpackChunkName: "login" */ "../views/login/Login"),
         beforeEnter:(to,from,next) =>{
-            const {isLogin}=localStorage
+            const {isLogin}=sessionStorage
             if (isLogin){
                 next({name:'Home'})
             }else {
@@ -43,7 +43,7 @@ const routes = [
                 ),
     },
     {
-        path: "/addressEdit",
+        path: "/addressEdit/:id",
         name: "AddressEdit",
         component: () =>
             import(
@@ -77,7 +77,7 @@ const router = createRouter({
     routes,
 });
 router.beforeEach((to, from, next) => {
-    const {isLogin} = localStorage;
+    const {isLogin} = sessionStorage;
     const {name} =to;
     // console.log(isLogin)
     // // 如果登录了
