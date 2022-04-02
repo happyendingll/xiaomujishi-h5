@@ -19,24 +19,21 @@
 
 </template>
 <script>
-import {ref, reactive} from 'vue';
+import {reactive, toRefs} from 'vue';
 import {useRouter} from 'vue-router';
 import {post} from "@/utils/request";
 import {Toast} from 'vant'
 
 export default {
   setup() {
-    const city = ref('');
-    const community = ref('');
-    const houseNumber = ref('');
-    const receiver = ref('');
-    const phone = ref('');
-    const address = reactive({city, community, houseNumber, receiver, phone});
+    const address = reactive({city:'', community:'', houseNumber:'', receiver:'', phone:''});
+    const {city, community, houseNumber, receiver, phone} = toRefs(address)
     const router = useRouter()
     const onClickLeft = () => history.back();
     const onClickRight = async () => {
-      const {errno,message} = await post('/api/user/address', address)
+      const {errno, message} = await post('/api/user/address', address)
       if (errno === 0) {
+        Toast('保存成功')
         await router.push({name: 'AddressList'})
       } else {
         Toast(`保存失败 - ${message}`)
