@@ -2,27 +2,29 @@
   <van-nav-bar
       title="编辑收货地址"
       left-text="返回"
-      right-text="保存"
       left-arrow
       @click-left="onClickLeft"
-      @click-right="onClickRight"
   />
-  <van-cell-group inset>
-    <!-- 输入任意文本 -->
-    <van-field v-model="address.city" label="所在城市："/>
-    <van-field v-model="address.community" label="小区/大厦/学校："/>
-    <van-field v-model="address.houseNumber" label="楼号-门牌号："/>
-    <van-field v-model="address.receiver" label="收货人："/>
-    <!-- 输入手机号，调起手机号键盘 -->
-    <van-field v-model="address.phone" type="tel" label="手机号"/>
-  </van-cell-group>
+  <van-address-edit
+      :area-list="areaList"
+      show-delete
+      show-set-default
+      show-search-result
+      :address-info="addressEditInfo"
+      :search-result="searchResult"
+      @save="onSave"
+      @delete="onDelete"
+      @change-detail="onChangeDetail"
+  />
 
 </template>
 <script>
-import { reactive} from 'vue';
+import {ref, reactive} from 'vue';
 import {useRoute} from 'vue-router';
-import {get,patch} from "@/utils/request";
+import {get, patch} from "@/utils/request";
 import {Toast} from 'vant'
+import {toRaw} from "@vue/reactivity";
+import {areaList} from "@vant/area-data";
 
 export default {
   setup() {
@@ -38,15 +40,49 @@ export default {
         Toast(`更新失败 - ${message}`)
       }
     }
+    const addressEditInfo=reactive({})
     !(async ()=>{
      const {data}=await get(`/api/user/address/${route.params.id}`)
-      address.city=data.city
-      address.community=data.community
-      address.phone=data.phone
-      address.receiver=data.receiver
-      address.houseNumber=data.houseNumber
+      addressEditInfo.city=data.city
+      addressEditInfo.addressDetail=data.community
+      addressEditInfo.tel=data.phone
+      addressEditInfo.name=data.receiver
+      addressEditInfo.areaCode=data.houseNumber
     })()
-    return {address, onClickLeft, onClickRight};
+
+
+    const searchResult = ref([]);
+    const onSave =async (content) => {
+      console.log(content)
+      const {addressDetail:community,areaCode:houseNumber,city,name:receiver,tel:phone}=toRaw(content)
+      const address = {city,community,houseNumber,receiver,phone}
+      const {errno, message} = await patch(`/api/user/address/${route.params.id}`, address)
+      if (errno === 0) {
+        Toast('更新成功')
+        history.back()
+      } else {
+        Toast(`保存失败 - ${message}`)
+      }
+    }
+    const onDelete = () => Toast('delete');
+    const onChangeDetail = (val) => {
+      if (val) {
+        searchResult.value = [
+          {
+            name: '黄龙万科中心',
+            address: '杭州市西湖区',
+          },
+        ];
+      } else {
+        searchResult.value = [];
+      }
+    };
+    return {address, onClickLeft, onClickRight,onSave,
+      onDelete,
+      areaList,
+      searchResult,
+      onChangeDetail,
+      addressEditInfo};
   }
 };
 

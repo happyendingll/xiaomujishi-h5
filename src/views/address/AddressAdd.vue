@@ -16,20 +16,10 @@
       @delete="onDelete"
       @change-detail="onChangeDetail"
   />
-  <!--  <van-cell-group inset>-->
-  <!--    &lt;!&ndash; 输入任意文本 &ndash;&gt;-->
-  <!--    <van-field v-model="city" label="所在城市："/>-->
-  <!--    <van-field v-model="community" label="小区/大厦/学校："/>-->
-  <!--    <van-field v-model="houseNumber" label="楼号-门牌号："/>-->
-  <!--    <van-field v-model="receiver" label="收货人："/>-->
-  <!--    &lt;!&ndash; 输入手机号，调起手机号键盘 &ndash;&gt;-->
-  <!--    <van-field v-model="phone" type="tel" label="手机号"/>-->
-  <!--  </van-cell-group>-->
 
 </template>
 <script >
 import {reactive, toRefs, ref} from 'vue';
-import {useRouter} from 'vue-router';
 import {post} from "@/utils/request";
 import {Toast} from 'vant';
 import {areaList} from '@vant/area-data';
@@ -40,7 +30,6 @@ export default {
   setup() {
     const address = reactive({city: '', community: '', houseNumber: '', receiver: '', phone: ''});
     const {city, community, houseNumber, receiver, phone} = toRefs(address)
-    const router = useRouter()
     const onClickLeft = () => history.back();
 
     const searchResult = ref([]);
@@ -51,7 +40,7 @@ export default {
       const {errno, message} = await post('/api/user/address', address)
       if (errno === 0) {
         Toast('保存成功')
-        await router.push({name: 'AddressList'})
+        history.back()
       } else {
         Toast(`保存失败 - ${message}`)
       }

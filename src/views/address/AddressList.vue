@@ -19,6 +19,7 @@ import {useRouter} from "vue-router"
 import {get} from '@/utils/request'
 import {ref} from "vue";
 import {Toast} from "vant";
+import {toRaw} from "@vue/reactivity";
 
 export default {
   setup() {
@@ -28,16 +29,18 @@ export default {
     !(async () => {
       const {data} = await get('/api/user/address')
       for (const item of data) {
-        const {_id: id, phone: tel, receiver: name, city, community, houseNumber} = item
-        const newItem = {id, tel, address: `${city}${community}${houseNumber}`, name}
+        const {_id: id, phone: tel, receiver: name, community} = item
+        const newItem = {id, tel, address: `${community}`, name}
         addressList.value.push(newItem)
       }
       addressList.value[0][`isDefault`] = true
     })()
     const chosenAddressId = ref('1');
     const onAdd = () => router.push({name: 'AddressAdd'})
-    const onEdit = (item, index) => Toast('编辑地址:' + index);
-
+    const onEdit = (item, index) => {
+      router.push({path:`/addressEdit/${toRaw(item).id}`,})
+      Toast('编辑地址:' + index);
+    }
 
     return {
       onClickLeft, addressList,
