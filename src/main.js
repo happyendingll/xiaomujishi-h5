@@ -5,7 +5,10 @@ import store from "./store";
 import "normalize.css";
 import "./style/base.scss";
 import {
+  Area,
+  ConfigProvider,
   Toast,
+  Skeleton,
   ActionBar,
   ActionBarIcon,
   ActionBarButton,
@@ -42,7 +45,10 @@ import {
 
 createApp(App)
   .use(store)
+  .use(Area)
+  .use(ConfigProvider)
   .use(Toast)
+  .use(Skeleton)
   .use(ActionBar)
   .use(ActionBarIcon)
   .use(ActionBarButton)
