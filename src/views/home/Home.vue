@@ -35,17 +35,16 @@
   </van-grid>
   <div class="divider"></div>
   <div class="hot-">热门商店</div>
-  <router-link to="/" v-for="item in shopList" :key="item._id">
+  <router-link :to="`/shop/${item._id}`" v-for="item in shopList" :key="item._id">
   <van-card
       :desc="`月售${item.monthlySale}  起送${item.sendOff}  运费${item.baseShippingCosts}`"
       :title="item.shopName"
       :thumb="`http://localhost:3000/images${item.imgUrl}`"
       centered=centered
-      @click="onClick()"
   >
-<!--    <view :slot:tags>-->
-<!--      <div>{{item.slogan}}</div>-->
-<!--    </view>-->
+    <template v-slot:tags>
+      <div>{{item.slogan}}</div>
+    </template>
   </van-card>
   </router-link>
   <van-tabbar v-model="active">
@@ -62,7 +61,6 @@
 
 <script>
 import {ref} from 'vue';
-import {useRouter} from 'vue-router';
 import {Toast} from "vant";
 import {get} from '@/utils/request'
 
@@ -70,14 +68,10 @@ export default {
   setup() {
     const active = ref(0);
     const value = ref('');
-    const router = useRouter()
     const images = [
       'https://cdn.jsdelivr.net/npm/@vant/assets/apple-1.jpeg',
       'https://cdn.jsdelivr.net/npm/@vant/assets/apple-2.jpeg',
     ];
-    const onClick = () => {
-      router.push({name: 'shop-info'})
-    }
     const handle_click = () => {
       Toast('暂未开发');
     }
@@ -86,7 +80,7 @@ export default {
       const {data} =await get('/api/shop/hot-shop')
       shopList.value=data
     })()
-    return {active, value, images, onClick, handle_click,shopList};
+    return {active, value, images, handle_click,shopList};
   },
 };
 </script>

@@ -20,21 +20,20 @@
 </template>
 <script>
 import { reactive} from 'vue';
-import {useRouter,useRoute} from 'vue-router';
+import {useRoute} from 'vue-router';
 import {get,patch} from "@/utils/request";
 import {Toast} from 'vant'
 
 export default {
   setup() {
     const address = reactive({city:'', community:'', houseNumber:'', receiver:'', phone:''});
-    const router = useRouter()
     const route=useRoute()
     const onClickLeft = () => history.back();
     const onClickRight = async () => {
       const {errno, message} = await patch(`/api/user/address/${route.params.id}`, address)
       if (errno === 0) {
         Toast('更新成功')
-        await router.push({name: 'AddressList'})
+        history.back();
       } else {
         Toast(`更新失败 - ${message}`)
       }

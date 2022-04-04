@@ -2,40 +2,48 @@
   <van-nav-bar
       title="管理收货地址"
       left-text="返回"
-      right-text="新建"
       left-arrow
       @click-left="onClickLeft"
-      @click-right="onClickRight"
   />
-  <div class="all">
-    <div class="title">我的收货地址</div>
-    <div class="address-item" v-for="item in addressList" :key="item._id">
-      <router-link :to="`/addressEdit/${item._id}`">
-      <span class="name">{{ item.receiver }}</span><span class="phone">{{ item.phone }}</span>
-      <div class="address">{{ item.city }}{{ item.community }}{{ item.houseNumber }}</div>
-      </router-link>
-    </div>
-  </div>
+
+  <van-address-list
+      v-model="chosenAddressId"
+      :list="addressList"
+      default-tag-text="默认"
+      @add="onAdd"
+      @edit="onEdit"
+  />
 </template>
 <script>
 import {useRouter} from "vue-router"
 import {get} from '@/utils/request'
 import {ref} from "vue";
+import {Toast} from "vant";
 
 export default {
   setup() {
     const router = useRouter()
     const addressList = ref([])
     const onClickLeft = () => history.back();
-    const onClickRight = () => {
-      router.push({name: 'AddressAdd'})
-    };
     !(async () => {
       const {data} = await get('/api/user/address')
-      addressList.value = data
+      for (const item of data) {
+        const {_id: id, phone: tel, receiver: name, city, community, houseNumber} = item
+        const newItem = {id, tel, address: `${city}${community}${houseNumber}`, name}
+        addressList.value.push(newItem)
+      }
+      addressList.value[0][`isDefault`] = true
     })()
+    const chosenAddressId = ref('1');
+    const onAdd = () => router.push({name: 'AddressAdd'})
+    const onEdit = (item, index) => Toast('编辑地址:' + index);
+
+
     return {
-      onClickLeft, onClickRight, addressList
+      onClickLeft, addressList,
+      onAdd,
+      onEdit,
+      chosenAddressId,
     };
   },
 }
@@ -58,11 +66,13 @@ export default {
 
 .address-item {
   box-sizing: border-box;
-  background-color: #ccc;
+  background-color: #F1F1F1;
   width: 28.3rem;
   height: 8.7rem;
   margin-top: 1.3rem;
   padding: 1.5rem 1.3rem;
+  border-radius: 1rem;
+  position: relative;
 }
 
 .name {
@@ -89,5 +99,12 @@ export default {
   font-size: 1.2rem;
   line-height: 1.7rem;
   color: #333333;
+}
+
+.test {
+  position: absolute;
+  right: 2.8rem;
+  top: 50%;
+  transform: translate(0, -50%)
 }
 </style>

@@ -14,7 +14,7 @@
             name="用户名"
             label="用户名"
             placeholder="用户名"
-            rules="[{ required: true, message: '请填写用户名' }]"
+            :rules="[{ required: true, message: '请填写用户名' }]"
             autocomplete="new-password"
             style="background-color: #ccc"
         />
@@ -24,7 +24,7 @@
             name="密码"
             label="密码"
             placeholder="密码"
-            rules="[{ required: true, message: '请填写密码' }]"
+            :rules="[{ required: true, message: '请填写密码' }]"
             autocomplete="new-password"
             style="background-color: #ccc;font-size: 16px"
         />
