@@ -34,11 +34,11 @@
 
 ### Grid 宫格
 
-#### https://youzan.github.io/vant-weapp/#/grid
+#### https://youzan.github.io/vant/#/zh-CNp/#/grid
 
 ### Card 卡片
 
-#### https://youzan.github.io/vant-weapp/#/card
+#### https://youzan.github.io/vant/#/zh-CN/#/card
 
 ### Tabbar 标签栏
 
@@ -113,7 +113,7 @@
 ### Empty 空状态
 
 #### https://youzan.github.io/vant/#/zh-CN/empty
-
-```
-
-```
+### Skeleton 骨架屏:延迟加载时的占位图,避免页面抖动
+#### https://youzan.github.io/vant/#/zh-CN/skeleton
+### Area 省市区选择
+#### https://youzan.github.io/vant/#/zh-CN/area
