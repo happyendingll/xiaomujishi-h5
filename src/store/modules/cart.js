@@ -27,6 +27,13 @@ const getters = {
         return getters.cartProducts.reduce((total, product) => {
             return total + product.price * product.quantity
         }, 0)
+    },
+    productsQuantity:(state)=>{
+        const productsQuantity=[]
+        state.items.map(value => {
+            productsQuantity[value._id]=value.quantity
+        })
+        return productsQuantity
     }
 }
 
@@ -56,7 +63,20 @@ const actions = {
             } else {
                 commit('incrementItemQuantity', cartItem)
             }
+    },
+    removeProductFromCart ({ state, commit},product){
+        const cartItem = state.items.find(item => item._id === product._id)
+        //数量大于1,数量减少1
+        if (cartItem.quantity>1){
+            commit('decreaseItemQuantity')
+        } else if (cartItem.quantity===1){
+            commit('dropProductFromCart',cartItem)
+        }
+    },
+    clearProductsFromCart({ commit}){
+        commit('clearItemsFromCart')
     }
+
 }
 
 // mutations
@@ -67,12 +87,26 @@ const mutations = {
             quantity: 1
         })
     },
+    dropProductFromCart (state, { _id }) {
+        state.items.map((value,index)=>{
+            if (value._id===_id){
+                state.items.splice(index,1)
+            }
+        })
+    },
+    clearItemsFromCart (state){
+        // state.items.splice(0,state.items.length)
+        state.items=[]
+    },
 
     incrementItemQuantity (state, { _id }) {
         const cartItem = state.items.find(item => item._id === _id)
         cartItem.quantity++
     },
-
+    decreaseItemQuantity(state, { _id }) {
+        const cartItem = state.items.find(item => item._id === _id)
+        cartItem.quantity--
+    },
     setCartItems (state, { items }) {
         state.items = items
     },
@@ -80,6 +114,7 @@ const mutations = {
     setCheckoutStatus (state, status) {
         state.checkoutStatus = status
     }
+
 }
 
 export default {
