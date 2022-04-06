@@ -5,6 +5,7 @@
         left-text="返回"
         left-arrow
         @click-left="onClickLeft"
+        @click="testClick"
     />
   </van-sticky>
   <van-skeleton title avatar :row="2" :loading="loading">
@@ -44,8 +45,8 @@
             class="my-card__product"
         >
           <template #num>
-            <van-stepper theme="round" button-size="22" disable-input
-                         min="0" default-value="0" @plus="handlePlus(item)"
+            <van-stepper v-model="productsQuantity[item._id]" theme="round" button-size="22" disable-input
+                         min="0" default-value="0" @plus="handlePlus(item)" @minus="handleMinus(item)"
             />
           </template>
         </van-card>
@@ -56,26 +57,26 @@
     <div class="shop__cart">
       <van-sticky offset-top="35.6rem">
         <div class="cart-header">
-          <div class="shop__clearCart">清空购物车</div>
+          <div class="shop__clearCart" @click="clearCart()">清空购物车</div>
         </div>
       </van-sticky>
-        <div class="products_content">
-          <div v-for="item in products" :key="item._id">
-            <van-card
-                :price="item.price"
-                :origin-price="item.originalPrice"
-                :title="item.name"
-                :thumb="`http://localhost:3000/images${item.imgUrl}`"
-                class="my-card__product"
-            >
-              <template #num>
-                <van-stepper v-model="item.quantity" theme="round" button-size="22" disable-input
-                             min="0" default-value="0" @plus="handlePlus(item)"
-                />
-              </template>
-            </van-card>
-          </div>
+      <div class="products_content">
+        <div v-for="item in products" :key="item._id">
+          <van-card
+              :price="item.price"
+              :origin-price="item.originalPrice"
+              :title="item.name"
+              :thumb="`http://localhost:3000/images${item.imgUrl}`"
+              class="my-card__cart"
+          >
+            <template #num>
+              <van-stepper v-model="productsQuantity[item._id]" theme="round" button-size="22" disable-input
+                           min="0" default-value="0" @plus="handlePlus(item)" @minus="handleMinus(item)"
+              />
+            </template>
+          </van-card>
         </div>
+      </div>
     </div>
   </van-popup>
   <van-action-bar style="z-index: 9999">
@@ -118,7 +119,7 @@ export default {
     })()
     const {productList, getProducts} = getProductsEffect()
     getProducts()
-    const {handlePlus} = addtoCartEffect()
+    const {handlePlus, handleMinus, handleClearCart} = useCartEffect()
     const onChange = function (index) {
       //根据ref拿到bom节点的方式获取tag
       // Toast(`${box.value.$el.children[index].attributes.tag.value}`);
@@ -143,8 +144,16 @@ export default {
       checkoutStatus,
       products,
       total,
+      productsQuantity,
       checkout
     } = shopCartEffect()
+    const testClick = () => {
+      console.log(productsQuantity.value)
+    }
+    const clearCart = () => {
+      productsQuantity.value = []
+      handleClearCart()
+    }
     return {
       active,
       onClickIcon,
@@ -154,21 +163,30 @@ export default {
       shopInfo,
       loading, onChange, box, getProducts, themeVars,
       show,
-      showPopup, handlePlus,
+      showPopup, handlePlus, handleMinus,
       checkoutStatus,
       products,
       total,
-      checkout
+      checkout,
+      productsQuantity,
+      testClick,
+      clearCart, handleClearCart
     };
   },
 };
-const addtoCartEffect = () => {
+const useCartEffect = () => {
   const store = useStore()
   const handlePlus = (item) => {
     console.log(item)
     store.dispatch('cart/addProductToCart', item)
   }
-  return {handlePlus}
+  const handleMinus = (item) => {
+    store.dispatch('cart/removeProductFromCart', item)
+  }
+  const handleClearCart = () => {
+    store.dispatch('cart/clearProductsFromCart')
+  }
+  return {handlePlus, handleMinus, handleClearCart}
 }
 const shopCartEffect = () => {
   const store = useStore()
@@ -176,13 +194,14 @@ const shopCartEffect = () => {
   const checkoutStatus = computed(() => store.state.cart.checkoutStatus)
   const products = computed(() => store.getters['cart/cartProducts'])
   const total = computed(() => store.getters['cart/cartTotalPrice'])
-
+  const productsQuantity = computed(() => store.getters['cart/productsQuantity'])
   const checkout = (products) => store.dispatch('cart/checkout', products)
 
   return {
     checkoutStatus,
     products,
     total,
+    productsQuantity,
     checkout
   }
 }
@@ -236,6 +255,29 @@ const shopCartEffect = () => {
   }
 }
 
+.my-card__cart {
+  height: 4.5rem;
+
+  .van-card__thumb {
+    height: 4.0rem;
+  }
+
+  .van-card__content {
+    justify-content: flex-start;
+  }
+
+  .van-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .van-image__img {
+      width: 3.8rem;
+      height: 3.8rem;
+    }
+  }
+}
+
 .shop__cart {
   height: 20rem;
 
@@ -245,6 +287,7 @@ const shopCartEffect = () => {
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
+    z-index: 9999;
 
     .shop__clearCart {
       width: 6rem;
