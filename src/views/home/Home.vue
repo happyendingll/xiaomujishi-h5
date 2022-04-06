@@ -1,5 +1,5 @@
 <template>
-<div class="all">
+<div>
   <div class="position">
     <van-icon name="location-o" class="position_icon_location" size="18"/>
     <div class="position_title">北京理工大学国防科技园2号楼10层北京理工大学国防科技园2号楼10层北京理工大学国防科技园2号楼10层</div>
@@ -41,6 +41,7 @@
       :title="item.shopName"
       :thumb="`http://localhost:3000/images${item.imgUrl}`"
       centered=centered
+      class="my-card__shop"
   >
     <template v-slot:tags>
       <div>{{item.slogan}}</div>
@@ -138,5 +139,16 @@ width: 28.3rem;
 .divider {
 background: #F1F1F1;
 height: 0.8rem;
+}
+.my-card__shop{
+  .van-image{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .van-image__img{
+      width: 4.7rem;
+      height: 4.7rem;
+    }
+  }
 }
 </style>

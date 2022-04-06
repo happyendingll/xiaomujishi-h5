@@ -117,3 +117,5 @@
 #### https://youzan.github.io/vant/#/zh-CN/skeleton
 ### Area 省市区选择
 #### https://youzan.github.io/vant/#/zh-CN/area
+### Sticky 粘性布局
+#### https://youzan.github.io/vant/#/zh-CN/sticky

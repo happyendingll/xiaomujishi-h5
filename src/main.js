@@ -5,6 +5,7 @@ import store from "./store";
 import "normalize.css";
 import "./style/base.scss";
 import {
+  Sticky,
   Area,
   ConfigProvider,
   Toast,
@@ -45,6 +46,7 @@ import {
 
 createApp(App)
   .use(store)
+  .use(Sticky)
   .use(Area)
   .use(ConfigProvider)
   .use(Toast)

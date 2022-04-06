@@ -10,7 +10,6 @@
       show-delete
       show-set-default
       show-search-result
-      :address-info="addressEditInfo"
       :search-result="searchResult"
       @save="onSave"
       @delete="onDelete"
@@ -58,7 +57,6 @@ export default {
         searchResult.value = [];
       }
     };
-    const addressEditInfo=ref({name:'zengzy',city: '沈阳市',tel:'13023802363',addressDetail:'dsflgh',areaCode:'131002'})
     return {
       city, community, houseNumber, receiver, phone, onClickLeft,
       onSave,
@@ -66,7 +64,6 @@ export default {
       areaList,
       searchResult,
       onChangeDetail,
-      addressEditInfo
     };
   }
 };

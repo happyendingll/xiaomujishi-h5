@@ -18,7 +18,6 @@
 import {useRouter} from "vue-router"
 import {get} from '@/utils/request'
 import {ref} from "vue";
-import {Toast} from "vant";
 import {toRaw} from "@vue/reactivity";
 
 export default {
@@ -37,9 +36,8 @@ export default {
     })()
     const chosenAddressId = ref('1');
     const onAdd = () => router.push({name: 'AddressAdd'})
-    const onEdit = (item, index) => {
+    const onEdit = (item) => {
       router.push({path:`/addressEdit/${toRaw(item).id}`,})
-      Toast('编辑地址:' + index);
     }
 
     return {
