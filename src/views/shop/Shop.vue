@@ -89,7 +89,7 @@
 import {onMounted, ref, computed} from 'vue';
 import {Toast} from 'vant';
 import {get} from "@/utils/request";
-import {useRoute} from "vue-router";
+import {useRoute,useRouter} from "vue-router";
 import {useStore} from 'vuex';
 
 const getProductsEffect = () => {
@@ -105,9 +105,12 @@ const getProductsEffect = () => {
 }
 export default {
   setup() {
+    const router = useRouter()
     const active = ref(0);
     const onClickIcon = () => Toast('点击图标');
-    const onClickButton = () => Toast('点击按钮');
+    const onClickButton = () => {
+      router.push({name:'ConfirmOrder'})
+    };
     const onClickLeft = () => history.back();
     const route = useRoute()
     const shopInfo = ref({})
