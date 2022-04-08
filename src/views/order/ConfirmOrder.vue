@@ -7,15 +7,15 @@
           left-arrow
           @click-left="onClickLeft"
       />
-      <div class="order__address">
+      <router-link class="order__address"  to="/addressList">
         <div class="address__title">收货地址</div>
-        <div class="address__detailAddress">北京理工大学国防科技园2号楼10层</div>
+        <div class="address__detailAddress">{{ addressInfo.city }}{{ addressInfo.community }}</div>
         <div class="address__userInfo">
-          <span class="userInfo__name">瑶妹（先生）</span>
-          <span class="userInfo__phone">1640622308205</span>
+          <span class="userInfo__name">{{ addressInfo.receiver }}</span>
+          <span class="userInfo__phone">{{ addressInfo.phone }}</span>
         </div>
         <div class="address__arrow">&gt;</div>
-      </div>
+      </router-link>
     </div>
     <div class="order">
       <div class="order__products">
@@ -25,8 +25,8 @@
             <img class="productItem__img" :src="`http://localhost:3000/images${item.imgUrl}`">
             <div class="productItem__info">
               <div class="productItem__name">{{ item.name }}</div>
-              <span class="productItem__price&num">{{item.price}}x{{item.quantity}}</span>
-              <span class="productItem__total">{{item.price*item.quantity}}元</span>
+              <span class="productItem__price&num">{{ item.price }}x{{ item.quantity }}</span>
+              <span class="productItem__total">{{ item.price * item.quantity }}元</span>
             </div>
           </div>
         </div>
@@ -40,17 +40,28 @@
 </template>
 
 <script>
-import {computed} from "vue";
-import{useStore} from 'vuex'
+import {computed, ref} from "vue";
+import {useStore} from 'vuex';
+import {get} from '@/utils/request';
 
+const useAddressEffect = () => {
+  const addressInfo = ref({})
+  const getAddressInfo = async () => {
+    const {data} = await get('/api/user/address/default')
+    addressInfo.value = data
+  }
+  return {addressInfo, getAddressInfo}
+}
 export default {
   name: "order",
   setup() {
     const onClickLeft = () => history.back();
-    const store =useStore()
+    const store = useStore()
     const products = computed(() => store.getters['cart/cartProducts'])
-    const total = computed(() => store.getters['cart/cartTotalPrice'])
-    return {onClickLeft,products,total};
+    const total = computed(() => store.getters['cart/cartTotalPrice']);
+    const {addressInfo, getAddressInfo} = useAddressEffect()
+    getAddressInfo()
+    return {onClickLeft, products, total, addressInfo, getAddressInfo};
   },
 }
 </script>
@@ -131,7 +142,7 @@ export default {
 
     .order__products {
       box-sizing: border-box;
-      padding:1.3rem;
+      padding: 1.3rem;
       width: 28.3rem;
       background-color: white;
       display: flex;
