@@ -109,7 +109,7 @@ export default {
     const active = ref(0);
     const onClickIcon = () => Toast('点击图标');
     const onClickButton = () => {
-      router.push({name:'ConfirmOrder'})
+      router.push({name:'ConfirmOrder',params:{id:route.params.id,shopName:shopInfo.value.shopName}})
     };
     const onClickLeft = () => history.back();
     const route = useRoute()

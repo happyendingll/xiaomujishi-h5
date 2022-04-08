@@ -7,7 +7,7 @@
           left-arrow
           @click-left="onClickLeft"
       />
-      <router-link class="order__address"  to="/addressList">
+      <router-link class="order__address" to="/addressList">
         <div class="address__title">收货地址</div>
         <div class="address__detailAddress">{{ addressInfo.city }}{{ addressInfo.community }}</div>
         <div class="address__userInfo">
@@ -19,7 +19,7 @@
     </div>
     <div class="order">
       <div class="order__products">
-        <div class="products__shopName">沃尔玛</div>
+        <div class="products__shopName">{{ shopInfo.shopName }}</div>
         <div class="products__productList" v-for="item in products" :key="item._id">
           <div class="products__productItem">
             <img class="productItem__img" :src="`http://localhost:3000/images${item.imgUrl}`">
@@ -40,9 +40,11 @@
 </template>
 
 <script>
-import {computed, ref} from "vue";
+import {computed, ref, reactive} from "vue";
+import {useRoute} from 'vue-router';
 import {useStore} from 'vuex';
-import {get} from '@/utils/request';
+import {get,post} from '@/utils/request';
+import {Toast} from "vant";
 
 const useAddressEffect = () => {
   const addressInfo = ref({})
@@ -52,6 +54,49 @@ const useAddressEffect = () => {
   }
   return {addressInfo, getAddressInfo}
 }
+const useShopInfo = () => {
+  const shopInfo = reactive({})
+  const route = useRoute()
+  shopInfo.shopName = route.params.shopName;
+  shopInfo.id = route.params.id;
+  console.log(shopInfo)
+  return shopInfo
+}
+//下单
+const useOrderEffect = (addressInfo,shopInfo,products) => {
+  const orderInfo = {
+    addressId: "",
+    shopId: "",
+    shopName: "",
+    isCanceled: false,
+    products: [
+      {
+        productId: "",
+        num: ""
+      }
+    ]
+  }
+  // console.log(addressInfo.value,shopInfo,products.value)
+  orderInfo.shopId = shopInfo.id;
+  orderInfo.shopName = shopInfo.shopName;
+  orderInfo.addressId= addressInfo.value._id;
+  orderInfo.products = products.value.map(item => {
+    return {
+      productId: item._id,
+      num: item.quantity
+    }
+  })
+  !( async () => {
+    const {errno,data} = await post('/api/order',orderInfo)
+    if (errno === 0) {
+      Toast.success('下单成功')
+      setTimeout(() => {
+        window.location.href = '/#/order'
+      },1000)
+    }
+    console.log(data)
+  })()
+}
 export default {
   name: "order",
   setup() {
@@ -59,9 +104,15 @@ export default {
     const store = useStore()
     const products = computed(() => store.getters['cart/cartProducts'])
     const total = computed(() => store.getters['cart/cartTotalPrice']);
-    const {addressInfo, getAddressInfo} = useAddressEffect()
+    const {addressInfo, getAddressInfo} = useAddressEffect()//获取收货地址信息
     getAddressInfo()
-    return {onClickLeft, products, total, addressInfo, getAddressInfo};
+    const shopInfo = useShopInfo()//获取商店信息
+    const onClickButton=()=>{
+      useOrderEffect(addressInfo,shopInfo,products)//下单逻辑
+    }
+
+
+    return {onClickLeft, products, total, addressInfo, getAddressInfo, shopInfo,onClickButton};
   },
 }
 </script>
