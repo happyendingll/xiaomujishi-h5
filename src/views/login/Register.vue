@@ -52,6 +52,7 @@
 import {ref,reactive} from 'vue';
 import {useRouter} from 'vue-router'
 import {post} from '@/utils/request'
+import {Toast} from "vant";
 
 export default {
   setup() {
@@ -67,8 +68,8 @@ export default {
     }
     const handleRegister = async () => {
 
-      const data = await post('/api/user/register', user)
-      console.log(data)
+      await post('/api/user/register', user)
+      Toast('注册成功')
     }
 
     return {
