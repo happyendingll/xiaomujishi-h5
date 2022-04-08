@@ -42,20 +42,21 @@ export default {
     }
     const addressEditInfo=reactive({})
     !(async ()=>{
-     const {data}=await get(`/api/user/address/${route.params.id}`)
+     const {data}=await get(`/api/user/address/detail/${route.params.id}`)
       addressEditInfo.city=data.city
       addressEditInfo.addressDetail=data.community
       addressEditInfo.tel=data.phone
       addressEditInfo.name=data.receiver
       addressEditInfo.areaCode=data.houseNumber
+      addressEditInfo.isDefault=data.isDefault
     })()
 
 
     const searchResult = ref([]);
     const onSave =async (content) => {
       console.log(content)
-      const {addressDetail:community,areaCode:houseNumber,city,name:receiver,tel:phone}=toRaw(content)
-      const address = {city,community,houseNumber,receiver,phone}
+      const {addressDetail:community,areaCode:houseNumber,city,name:receiver,tel:phone,isDefault}=toRaw(content)
+      const address = {city,community,houseNumber,receiver,phone,isDefault}
       const {errno, message} = await patch(`/api/user/address/${route.params.id}`, address)
       if (errno === 0) {
         Toast('更新成功')

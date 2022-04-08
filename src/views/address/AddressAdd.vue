@@ -17,25 +17,29 @@
   />
 
 </template>
-<script >
-import {reactive, toRefs, ref} from 'vue';
+<script>
+import {ref} from 'vue';
 import {post} from "@/utils/request";
 import {Toast} from 'vant';
 import {areaList} from '@vant/area-data';
-import { toRaw } from '@vue/reactivity';
+import {toRaw} from '@vue/reactivity';
 
 
 export default {
   setup() {
-    const address = reactive({city: '', community: '', houseNumber: '', receiver: '', phone: ''});
-    const {city, community, houseNumber, receiver, phone} = toRefs(address)
     const onClickLeft = () => history.back();
-
     const searchResult = ref([]);
-    const onSave =async (content) => {
+    const onSave = async (content) => {
       console.log(content)
-      const {addressDetail:community,areaCode:houseNumber,city,name:receiver,tel:phone}=toRaw(content)
-      const address = {city,community,houseNumber,receiver,phone}
+      const {
+        addressDetail: community,
+        areaCode: houseNumber,
+        city,
+        name: receiver,
+        tel: phone,
+        isDefault
+      } = toRaw(content)
+      const address = {city, community, houseNumber, receiver, phone, isDefault}
       const {errno, message} = await post('/api/user/address', address)
       if (errno === 0) {
         Toast('保存成功')
@@ -58,7 +62,7 @@ export default {
       }
     };
     return {
-      city, community, houseNumber, receiver, phone, onClickLeft,
+      onClickLeft,
       onSave,
       onDelete,
       areaList,
